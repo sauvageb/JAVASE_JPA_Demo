@@ -6,6 +6,9 @@
     <persistence-unit name="myPU">
 
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.jpa.example.entity.AuthorEntity</class>
+        <class>com.jpa.example.entity.BookEntity</class>
+        <class>com.jpa.example.entity.BookAuthorEntity</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="jakarta.persistence.jdbc.url"
@@ -20,7 +23,11 @@
             <!-- update : met à jour le schéma en comparant les entités et le schéma actuel de la base de données  -->
             <!-- create : supprime le schéma de la base de données puis utilise les entités pour le recréer  -->
             <!-- create-drop : effectue l'option create à la fermeture de l'EntityManagerFactory  -->
-            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:8889/books_jpa"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.connection.username" value="root"/>
+            <property name="hibernate.connection.password" value="root"/>
         </properties>
 
     </persistence-unit>

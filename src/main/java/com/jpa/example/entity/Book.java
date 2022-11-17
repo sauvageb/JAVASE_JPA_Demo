@@ -1,8 +1,11 @@
-package com.jpa.example;
+package com.jpa.example.entity;
 
+import com.jpa.example.entity.Author;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "book")
@@ -20,6 +23,14 @@ public class Book {
     private Integer rating;
     private LocalDate publishingDate;
     private String pictureUrl;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST})
+    @JoinTable(
+            name = "book_author",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private List<Author> authorList = new ArrayList<>();
 
     public Book() {
     }
@@ -110,5 +121,13 @@ public class Book {
 
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
+    }
+
+    public List<Author> getAuthorList() {
+        return authorList;
+    }
+
+    public void setAuthorList(List<Author> authorList) {
+        this.authorList = authorList;
     }
 }

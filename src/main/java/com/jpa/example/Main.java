@@ -1,11 +1,13 @@
 package com.jpa.example;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
+import com.jpa.example.dao.BookJpaCrudDao;
+import com.jpa.example.dao.CrudDAO;
+import com.jpa.example.entity.Author;
+import com.jpa.example.entity.Book;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Optional;
 
 public class Main {
 
@@ -20,28 +22,23 @@ public class Main {
                 "https://m.media-amazon.com/images/I/71ZqQ7rSupL.jpg"
         );
 
-        // TODO : create singleton for EntityManagerFactory
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPU");
-        // TODO : create DAO Layer for JPA (with entityManager methods)
-        EntityManager entityManager = emf.createEntityManager();
-        EntityTransaction et = entityManager.getTransaction();
-        try {
-            et.begin();
-            // CREATE
-            entityManager.persist(book);
-            // READ
-            //            entityManager.find()
-            //            Query query = entityManager.createQuery("Requete en JPQL");
-            // UPADTE
-            //            entityManager.merge()
-            // DELETE
-            //             entityManager.remove();
+        // CREATE
+        CrudDAO<Book> bookCrudDAO = new BookJpaCrudDao();
+        book.setAuthorList(Arrays.asList(new Author("Miguel", "Ruiz")));
+        Book createdBook = bookCrudDAO.create(book);
 
-            et.commit();
-        } catch (Exception e) {
-            if (et.isActive()) et.rollback();
-        } finally {
-            emf.close();
-        }
+        // READ
+        Optional<Book> book1 = bookCrudDAO.findById(createdBook.getId());
+        System.out.println(book1.get().getName());
+
+        // UPDATED
+        createdBook.setName("UPDATED");
+        bookCrudDAO.update(createdBook);
+
+        // DELETE
+        bookCrudDAO.delete(createdBook.getId());
+
+        // FIND ALL => no display.
+        bookCrudDAO.findAll().forEach(b -> System.out.println(b));
     }
 }
